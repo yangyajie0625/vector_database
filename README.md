@@ -78,7 +78,7 @@ python batch_query_images.py --model_path "/huggingface/clip-vit-large-patch14-3
 
 Use the CLIP model to extract feature vectors from images in the specified directory, and save the embeddings and image paths as a `.npz` file.
 ```bash
-python extract_and_save.py 
+python extract_and_save.py \
 
 --model_path "/huggingface/clip-vit-large-patch14-336" \
 
@@ -91,7 +91,7 @@ python extract_and_save.py
 
 Query similar images from a stored embedding file and log the query time to a text file, outputting the query results.
 ```bash
-python query_from_embedding_file.py 
+python query_from_embedding_file.py \
 
 --embeddings_file embedding.npz \
 
