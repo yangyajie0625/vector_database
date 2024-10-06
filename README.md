@@ -32,9 +32,7 @@ Query the top-k similar images from a specific image in the vector database.
 python query_vector_db.py --model_path "/huggingface/clip-vit-large-patch14-336" \
 
 --query_image_path "/huggingface/dataset/image.jpg" \
-
 --vector_db_load_path "/huggingface/vector_db" \
-
 --vector_db_name "vector_db" \
 
 --k 5
@@ -47,11 +45,8 @@ Randomly sample `sample_num` images from `source_image_dir`, query the top-k sim
 python individual_query_images.py --model_path "/huggingface/clip-vit-large-patch14-336" \
 
 --vector_db_load_path "/huggingface/vector_db" \
-
 --vector_db_name "vector_db" \
-
 --source_image_dir "/huggingface/dataset" \
-
 --sample_num 100 \
 
 --k 5
@@ -64,13 +59,9 @@ Randomly sample `sample_num` images from `source_image_dir`, query the top-k sim
 python batch_query_images.py --model_path "/huggingface/clip-vit-large-patch14-336" \
 
 --vector_db_load_path "/huggingface/vector_db" \
-
 --vector_db_name "vector_db" \
-
 --source_image_dir "/huggingface/dataset" \
-
 --sample_num 100 \
-
 --k 5
 ```
 
@@ -79,11 +70,8 @@ python batch_query_images.py --model_path "/huggingface/clip-vit-large-patch14-3
 Use the CLIP model to extract feature vectors from images in the specified directory, and save the embeddings and image paths as a `.npz` file.
 ```bash
 python extract_and_save.py \
-
 --model_path "/huggingface/clip-vit-large-patch14-336" \
-
 --source_image_dir "/huggingface/dataset" \
-
 --output_file embedding.npz
 ```
 
@@ -92,12 +80,8 @@ python extract_and_save.py \
 Query similar images from a stored embedding file and log the query time to a text file, outputting the query results.
 ```bash
 python query_from_embedding_file.py \
-
 --embeddings_file embedding.npz \
-
 --vector_db_load_path "/huggingface/vector_db" \
-
 --vector_db_name "vector_db" \
-
 --k 10
 ```
