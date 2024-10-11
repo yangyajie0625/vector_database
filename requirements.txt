@@ -1,0 +1,7 @@
+chromadb==0.5.5
+opencv_python==4.10.0.84
+Pillow==10.4.0
+scikit_learn==1.5.2
+torch==2.4.1+cu124
+tqdm==4.66.5
+transformers==4.44.2
