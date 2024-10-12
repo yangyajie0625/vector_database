@@ -10,8 +10,9 @@ def main():
     parser.add_argument('action', choices=['create', 'update'], help='Operation type: create or update the vector database')
     parser.add_argument('--vector_db_path', required=True, help='Path to save or load the vector database')
     parser.add_argument('--vector_db_name', required=True, help='Name of the vector database')
+    parser.add_argument('--clip_path', help='Path to the clip model and processor')
     parser.add_argument('--dataset_path', required=True, help='Path to the image dataset')
-    parser.add_argument('--distance_func', default='cosine', help='Distance function (used only for creation)')
+    parser.add_argument('--distance_func', choices=['l2', 'ip', 'cosine'], help='Distance function')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for processing images')
     parser.add_argument('--device', default=None, help='Computation device (e.g., "cpu" or "cuda")')
     args = parser.parse_args()
@@ -19,7 +20,7 @@ def main():
         os.makedirs('logs')
     time_logger = TimeLogger(log_filename="logs/time_log_" + args.action, with_current_time=True)
     vector_db = VectorDB(device=args.device)
-    clip_model, clip_processor = load_clip_model_and_processor(args.device or torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+    clip_model, clip_processor = load_clip_model_and_processor(args.device or torch.device("cuda" if torch.cuda.is_available() else "cpu"), args.clip_path)
     time_logger.record_moment("Model loaded")
     if args.action == 'create':
         vector_db.create_vector_db(
