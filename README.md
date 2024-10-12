@@ -17,10 +17,10 @@ pip install -r requirements.txt
 Load the source dataset, use the CLIP model to extract features, and save them in the vector database.
 
 ```bash
-python create_or_update.py create 
+python create_or_update.py create \
 --vector_db_path /path/to/save/vector_db \
 --vector_db_name your_vector_db \
---clip_path /path/to/clip_model
+--clip_path /path/to/clip_model \
 --dataset_path /path/to/dataset \
 --distance_func cosine \
 --batch_size 32 \
@@ -29,10 +29,10 @@ python create_or_update.py create
 
 Add a new source dataset to the existing vector database.
 ```bash
-python create_or_update.py update 
+python create_or_update.py update \
 --vector_db_path /path/to/load/vector_db \
 --vector_db_name your_vector_db \
---clip_path /path/to/clip_model
+--clip_path /path/to/clip_model \
 --dataset_path /path/to/dataset \
 --distance_func cosine \
 --batch_size 32 \
