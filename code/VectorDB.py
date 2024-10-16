@@ -86,33 +86,44 @@ class VectorDB:
 
         return result_list, valid_image_paths
 
-
     def query_with_fixed_total_queries(self, clip_model, clip_processor, dataset_path, query_num, batch_size=32):
         image_paths = self._collect_image_paths(dataset_path)
         total_images = len(image_paths)
         if total_images == 0:
             raise ValueError("No images found in the dataset path.")
-        queries_per_image = query_num // total_images
-        remaining_queries = query_num % total_images
+        queries_per_image = max(1, query_num // total_images)
+
         query_embedding, valid_image_paths = batch_image_to_embedding(image_paths, clip_model, clip_processor,
                                                                       self.device, batch_size)
-        result_list = []
-        if queries_per_image > 0:
-            result = self.collection.query(
-                query_embeddings=query_embedding,
-                n_results=queries_per_image
-            )
-            result_list.append(result)
-        if remaining_queries > 0:
-            remaining_indices = random.sample(range(total_images), remaining_queries)
-            for idx in remaining_indices:
-                remaining_result = self.collection.query(
-                    query_embeddings=[query_embedding[idx]],
-                    n_results=1
-                )
-                result_list.append(remaining_result)
+        result_paths_set = set()
 
-        return result_list, valid_image_paths
+        result = self.collection.query(
+            query_embeddings=query_embedding,
+            n_results=queries_per_image,
+        )
+        for res in result['metadatas']:
+            for metadata in res:
+                result_paths_set.add(metadata['path'])
+
+        remaining_queries = query_num - len(result_paths_set)
+        while remaining_queries > 0:
+            queries_per_image = max(1, remaining_queries // total_images)
+            for embedding in query_embedding:
+                result = self.collection.query(
+                    query_embeddings=[embedding],
+                    n_results=queries_per_image,
+                    where={"path": {"$nin": list(result_paths_set)}}
+                    )
+                for res in result['metadatas']:
+                    for metadata in res:
+                        result_paths_set.add(metadata['path'])
+                remaining_queries = query_num - len(result_paths_set)
+                if remaining_queries <= 0:
+                    break
+
+        result_paths_list = list(result_paths_set)
+        return result_paths_list, valid_image_paths
+
 
     def query_vector_db_by_caption(self, clip_model, clip_processor, caption_path, k=1):
         with open(caption_path, 'r', encoding='utf-8') as f:

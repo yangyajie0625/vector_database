@@ -124,9 +124,7 @@ def main():
             )
             time_logger.end_period("Query")
             for result in results:
-                for metadata in result.get('metadatas'):
-                    for item in metadata:
-                        results_serializable.append({'result':item.get('path')})
+                results_serializable.append({'result':result})
 
         elif args.method == 'query_vector_db_by_caption':
             if not args.caption_path:
